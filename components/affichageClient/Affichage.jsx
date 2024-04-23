@@ -89,7 +89,6 @@ function Affichage() {
                 <Text>Prix : {appartement.prix}</Text>
                 <Text>Date de début : {appartement.dateDebut}</Text>
                 <Text>Date de fin : {appartement.dateFin}</Text>
-                <Text>Statut : {appartement.statut}</Text>
               </Card.Content>
             </Card>
           </TouchableOpacity>
