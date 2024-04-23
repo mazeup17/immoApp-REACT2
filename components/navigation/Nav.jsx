@@ -17,7 +17,7 @@ export default function Nav() {
     return (
       <NavigationContainer>
         <Drawer.Navigator initialRouteName="Réservation">
-          <Drawer.Screen name="Réservations" component={Affichage} />
+          <Drawer.Screen name="Réservation" component={Affichage} />
           <Drawer.Screen name="Déconnexion" component={Logout} />
         </Drawer.Navigator>
       </NavigationContainer>
