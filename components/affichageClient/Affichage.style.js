@@ -27,13 +27,12 @@ const s = StyleSheet.create({
   cardActions: {
     justifyContent: "center", // Pour centrer le contenu horizontalement
   },
-  scrollView: {
-    justifyContent: "center",
-    flexGrow: 1,
-    paddingBottom: 20, // Ajoutez un padding inférieur pour éviter que la dernière carte ne soit coupée
+  cardContent: {
+    padding: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
   },
-
-  body: {},
 });
 
 export { s };
