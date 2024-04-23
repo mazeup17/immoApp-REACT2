@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import { Card, ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../../utils/context/index.js";
 import { s } from "./Affichage.style.js";
+import { useNavigation } from "@react-navigation/native";
 
 function Affichage() {
   const [appartementProprio, setAppartementProprio] = useState([]);
@@ -10,10 +11,7 @@ function Affichage() {
   const [imageURL, setImageURL] = useState({});
   const { userId } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
-
-  const onPress = () => {
-    console.log("TouchableOpacity pressed");
-  };
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,6 +62,11 @@ function Affichage() {
     fetchData();
   }, [userId]);
 
+  const reservationPresse = (appartement) => {
+    navigation.navigate("Piece", { appartementId: appartement.id_logement });
+    //setSelectionnerReserv(appartement);
+  };
+
   if (loading) {
     return (
       <View style={s.container}>
@@ -75,7 +78,11 @@ function Affichage() {
   return (
     <View style={s.body}>
       {appartementProprio.map((appartement) => (
-        <Card style={s.cardContainer} key={appartement.id} onPress={onPress}>
+        <Card
+          style={s.cardContainer}
+          key={appartement.id}
+          onPress={() => reservationPresse(appartement)}
+        >
           <Card.Cover
             style={s.cardCover}
             source={{ uri: imageURL[appartement.id_logement] }}

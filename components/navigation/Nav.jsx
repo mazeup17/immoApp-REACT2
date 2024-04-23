@@ -6,6 +6,7 @@ import { useContext, useEffect } from "react";
 import Logout from "../Logout/Logout";
 import { UserContext } from "../../utils/context/index";
 import Affichage from "../affichageClient/Affichage";
+import Piece from "../affichagePiece/Piece";
 
 const Drawer = createDrawerNavigator();
 
@@ -17,8 +18,9 @@ export default function Nav() {
     return (
       <NavigationContainer>
         <Drawer.Navigator initialRouteName="Réservation">
-          <Drawer.Screen name="Réservation" component={Affichage} />
+          <Drawer.Screen name="Réservations" component={Affichage} />
           <Drawer.Screen name="Déconnexion" component={Logout} />
+          <Drawer.Screen name="Piece" component={Piece} />
         </Drawer.Navigator>
       </NavigationContainer>
     );
