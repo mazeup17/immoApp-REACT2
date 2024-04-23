@@ -11,6 +11,10 @@ function Affichage() {
   const { userId } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
 
+  const onPress = () => {
+    console.log("TouchableOpacity pressed");
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,28 +74,22 @@ function Affichage() {
 
   return (
     <View style={s.body}>
-      {appartementProprio.map((appartement, index) => (
-        <TouchableOpacity
-          activeOpacity={1}
-          key={appartement.id}
-          onPress={() => {}}
-        >
-          <Card style={s.cardContainer} onPress={() => {}}>
-            <Card.Cover
-              style={s.cardCover}
-              source={{ uri: imageURL[appartement.id_logement] }}
-            />
-            <Card.Title
-              title={donneeReservation[0].libelle}
-              subtitle={`${donneeReservation[0].ville}, ${donneeReservation[0].cp}`}
-            />
-            <Card.Content style={s.cardContent}>
-              <Text>{appartement.prix}€</Text>
-              <Text>{appartement.dateDebut}</Text>
-              <Text>{appartement.dateFin}</Text>
-            </Card.Content>
-          </Card>
-        </TouchableOpacity>
+      {appartementProprio.map((appartement) => (
+        <Card style={s.cardContainer} key={appartement.id} onPress={onPress}>
+          <Card.Cover
+            style={s.cardCover}
+            source={{ uri: imageURL[appartement.id_logement] }}
+          />
+          <Card.Title
+            title={donneeReservation[0].libelle}
+            subtitle={`${donneeReservation[0].ville}, ${donneeReservation[0].cp}`}
+          />
+          <Card.Content style={s.cardContent}>
+            <Text>{appartement.prix}€</Text>
+            <Text>{appartement.dateDebut}</Text>
+            <Text>{appartement.dateFin}</Text>
+          </Card.Content>
+        </Card>
       ))}
     </View>
   );
