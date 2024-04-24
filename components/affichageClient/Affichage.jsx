@@ -53,7 +53,7 @@ function Affichage() {
         setImageURL(imageURLs);
         setTimeout(() => {
           setLoading(false);
-        }, 1000);
+        }, 500);
       } catch (error) {
         console.error(error);
       }
@@ -63,8 +63,9 @@ function Affichage() {
   }, [userId]);
 
   const reservationPresse = (appartement) => {
-    navigation.navigate("Piece", { appartementId: appartement.id_logement });
-    //setSelectionnerReserv(appartement);
+    navigation.navigate("Piece", {
+      appartementId: appartement.id_logement,
+    });
   };
 
   if (loading) {

@@ -1,14 +1,30 @@
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import Piece from "./components/affichagePiece/Piece";
 import Nav from "./components/navigation/Nav";
+import { createStackNavigator } from "@react-navigation/stack";
+
 import { UserProvider } from "./utils/context";
-const Drawer = createDrawerNavigator();
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <UserProvider>
-      <Nav />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Nav"
+            component={Nav}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Piece"
+            component={Piece}
+            options={{ title: "Etat des lieux" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </UserProvider>
   );
 }

@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { View, Text, Button } from "react-native";
 
 export function Piece({ route }) {
+  if (!route.params) {
+    return;
+  }
   const { appartementId } = route.params;
   const [pieceLogement, setPieceLogement] = useState([]);
   const [pieceIndex, setPieceIndex] = useState(0);
