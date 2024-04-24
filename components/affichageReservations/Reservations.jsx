@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { Card, ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../../utils/context/index.js";
-import { s } from "./Affichage.style.js";
+import { s } from "./Reservations.style.js";
 import { useNavigation } from "@react-navigation/native";
 
 function Affichage() {
@@ -17,7 +17,7 @@ function Affichage() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://31.207.34.99/immoApi/reservation.php?id_utilisateur=${userId}`
+          `http://31.207.34.99/immoApi/reservation.php?id_utilisateur2=${userId}`
         );
         if (userId) {
           if (!response.ok) {
@@ -54,7 +54,7 @@ function Affichage() {
         setImageURL(imageURLs);
         setTimeout(() => {
           setLoading(false);
-        }, 700);
+        }, 500);
       } catch (error) {
         console.error(error);
       }
@@ -62,12 +62,6 @@ function Affichage() {
 
     fetchData();
   }, [userId]);
-
-  const reservationPresse = (appartement) => {
-    navigation.navigate("Piece", {
-      appartementId: appartement.id_logement,
-    });
-  };
 
   if (loading) {
     return (
@@ -80,19 +74,15 @@ function Affichage() {
   if (appartementProprio.error != null) {
     return (
       <View style={s.container}>
-        <Text>Vous n'avez aucune réservation en cours</Text>
+        <Text>Vous n'avez aucune réservation !</Text>
       </View>
     );
   }
 
   return (
-    <View style={s.body}>
+    <ScrollView style={s.body}>
       {appartementProprio.map((appartement) => (
-        <Card
-          style={s.cardContainer}
-          key={appartement.id}
-          onPress={() => reservationPresse(appartement)}
-        >
+        <Card style={s.cardContainer} key={appartement.id}>
           <Card.Cover
             style={s.cardCover}
             source={{ uri: imageURL[appartement.id_logement] }}
@@ -110,7 +100,7 @@ function Affichage() {
           </Card.Content>
         </Card>
       ))}
-    </View>
+    </ScrollView>
   );
 }
 
