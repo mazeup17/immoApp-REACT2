@@ -14,7 +14,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="Nav"
+            name=" "
             component={Nav}
             options={{ headerShown: false }}
           />
