@@ -64,8 +64,11 @@ function Affichage() {
   }, [userId]);
 
   const reservationPresse = (appartement) => {
-    navigation.navigate("Piece", {
-      appartementId: appartement.id_logement,
+    navigation.navigate({
+      name: "Piece",
+      params: {
+        appartementId: appartement.id_logement,
+      },
     });
   };
 

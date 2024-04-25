@@ -4,6 +4,7 @@ import Piece from "./components/affichagePiece/Piece";
 import Nav from "./components/navigation/Nav";
 import { createStackNavigator } from "@react-navigation/stack";
 import { UserProvider } from "./utils/context";
+import { OpenCamera } from "./components/Camera/OpenCamera";
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,11 @@ export default function App() {
             name="Piece"
             component={Piece}
             options={{ title: "Etat des lieux" }}
+          />
+          <Stack.Screen
+            name="OpenCamera"
+            component={OpenCamera}
+            options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </NavigationContainer>
