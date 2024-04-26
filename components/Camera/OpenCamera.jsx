@@ -11,12 +11,14 @@ import {
 import { useState } from "react";
 import { AntDesign } from "@expo/vector-icons"; // Importez les icônes d'une bibliothèque
 import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "react-native";
 
 export function OpenCamera() {
   const navigation = useNavigation();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [blobCapturedImage, setBlobCapturedImage] = useState(null);
+  StatusBar.setHidden(true);
 
   const autorisation = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
@@ -50,6 +52,10 @@ export function OpenCamera() {
     prendrePhoto();
   };
 
+  const annulerPhoto = () => {
+    navigation.goBack();
+  };
+
   const validerPhoto = () => {
     navigation.navigate({
       name: "Piece",
@@ -67,12 +73,19 @@ export function OpenCamera() {
             flex: 1,
           }}
         >
-          <View style={s.previewContainer}>
-            <TouchableOpacity onPress={retakePicture}>
-              <AntDesign name="sync" size={36} color="white" />
+          <View style={s.btnCancel}>
+            <TouchableOpacity onPress={annulerPhoto}>
+              <AntDesign name="close" size={36} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={savePhoto}>
-              <AntDesign name="check" size={48} color="white" />
+          </View>
+          <View style={s.previewContainer}>
+            <TouchableOpacity style={s.test} onPress={retakePicture}>
+              <AntDesign name="sync" size={36} color="white" />
+              <Text style={s.text}>REPRENDRE</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={s.test} onPress={savePhoto}>
+              <AntDesign name="check" size={36} color="white" />
+              <Text style={s.text}>SAUVEGARDER</Text>
             </TouchableOpacity>
           </View>
         </ImageBackground>
@@ -96,6 +109,11 @@ export function OpenCamera() {
           }}
         >
           <View style={s.container}>
+            <View style={s.btnCancel}>
+              <TouchableOpacity onPress={annulerPhoto}>
+                <AntDesign name="close" size={36} color="white" />
+              </TouchableOpacity>
+            </View>
             <View style={s.cameraContainer}>
               <TouchableOpacity onPress={prendrePhoto} style={s.btnTakePhoto} />
             </View>
@@ -130,21 +148,26 @@ const s = StyleSheet.create({
     alignItems: "center",
     padding: 50,
   },
+  btnCancel: {
+    color: "#fff",
+    alignItems: "flex-end",
+    marginTop: 30,
+    marginRight: 30,
+  },
   btnTakePhoto: {
     width: 70,
     height: 70,
     bottom: 0,
     borderRadius: 50,
     backgroundColor: "#fff",
-    marginBottom: 50,
+    marginBottom: 25,
   },
-  cardActions: {
-    justifyContent: "center", // Pour centrer le contenu horizontalement
-  },
-  cardContent: {
-    padding: 10,
-    justifyContent: "space-between",
+  test: {
     alignItems: "center",
-    flexDirection: "row",
+  },
+  text: {
+    color: "#fff",
+    alignItems: "center",
+    fontWeight: "bold",
   },
 });

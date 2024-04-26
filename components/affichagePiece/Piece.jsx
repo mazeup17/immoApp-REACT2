@@ -9,7 +9,6 @@ import {
   Image,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { Camera } from "expo-camera";
 import { useNavigation } from "@react-navigation/native";
 
 export function Piece({ route }) {
@@ -160,15 +159,17 @@ export function Piece({ route }) {
                   <TouchableOpacity onPress={() => handlePhoto()}>
                     <Text>Prendre une photo (pas obligatoire)</Text>
                   </TouchableOpacity>
-                  <Image
-                    style={{
-                      width: 66,
-                      height: 58,
-                    }}
-                    source={{
-                      uri: `data:image/jpg;base64,${route.params?.photoEquipement}`,
-                    }}
-                  />
+                  <View style={{ width: 200, height: 200 }}>
+                    <Image
+                      style={{
+                        flex: 1,
+                        resizeMode: "contain",
+                      }}
+                      source={{
+                        uri: `data:image/jpg;base64,${route.params?.photoEquipement}`,
+                      }}
+                    />
+                  </View>
                   <View style={{ flexDirection: "row" }}>
                     {[1, 2, 3, 4, 5].map((value) => (
                       <FontAwesome
