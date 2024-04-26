@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Camera } from "expo-camera";
 import { StyleSheet } from "react-native";
 import {
@@ -150,9 +150,8 @@ const s = StyleSheet.create({
   },
   btnCancel: {
     color: "#fff",
-    alignItems: "flex-end",
     marginTop: 30,
-    marginRight: 30,
+    marginLeft: 30,
   },
   btnTakePhoto: {
     width: 70,
