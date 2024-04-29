@@ -4,7 +4,6 @@ import {
   Text,
   Button,
   TextInput,
-  Alert,
   TouchableOpacity,
   Image,
 } from "react-native";
@@ -44,8 +43,11 @@ export function Equipement({ route }) {
     fetchEquipements();
   });
 
-  const handlePhoto = async () => {
-    navigation.navigate("OpenCamera", { routeName: "Equipement" });
+  const handlePhoto = async (equipementId) => {
+    navigation.navigate("OpenCamera", {
+      routeName: "Equipement",
+      equipementId,
+    });
   };
 
   const handleNext = () => {
@@ -74,6 +76,18 @@ export function Equipement({ route }) {
     }));
   };
 
+  if (route.params?.photoEquipement && route.params?.equipementId) {
+    const photoEquipement = route.params.photoEquipement;
+
+    // Parcourez les équipements et mettez à jour la photo de l'équipement spécifique
+    equipements.forEach((equipement, index) => {
+      if (equipement.id === route.params.equipementId) {
+        // Mettez à jour la photo de l'équipement
+        equipements[index].photo = photoEquipement;
+      }
+    });
+  }
+
   const handleConfirmation = async () => {
     const dataComments = Object.entries(comments).map(([id, commentaire]) => ({
       id: parseInt(id),
@@ -94,7 +108,6 @@ export function Equipement({ route }) {
   };
 
   useEffect(() => {
-    // Mettre à jour le titre de la page lorsque la pièce actuelle change
     if (pieceLibelle) {
       navigation.setOptions({
         title: pieceLibelle,
@@ -117,20 +130,24 @@ export function Equipement({ route }) {
                   handleCommentChange(equipements[equipementIndex].id, text)
                 }
               />
-              <TouchableOpacity onPress={() => handlePhoto()}>
+              <TouchableOpacity
+                onPress={() => handlePhoto(equipements[equipementIndex].id)}
+              >
                 <Text>Ajouter une photo (pas obligatoire)</Text>
               </TouchableOpacity>
               <View style={{}}>
-                <Image
-                  style={{
-                    width: 200,
-                    height: 200,
-                    resizeMode: "contain",
-                  }}
-                  source={{
-                    uri: `data:image/jpg;base64,${route.params?.photoEquipement}`,
-                  }}
-                />
+                {equipements[equipementIndex].photo && (
+                  <Image
+                    style={{
+                      width: 200,
+                      height: 200,
+                      resizeMode: "contain",
+                    }}
+                    source={{
+                      uri: `data:image/jpg;base64,${equipements[equipementIndex].photo}`,
+                    }}
+                  />
+                )}
               </View>
               <View style={{ flexDirection: "row" }}>
                 {[1, 2, 3, 4, 5].map((value) => (

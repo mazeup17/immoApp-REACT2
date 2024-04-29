@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Camera } from "expo-camera";
 import { StyleSheet } from "react-native";
 import {
@@ -15,11 +15,16 @@ import { StatusBar } from "react-native";
 
 export function OpenCamera({ route }) {
   const navigation = useNavigation();
-  const { routeName } = route.params;
+  const { routeName, equipementId } = route.params;
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [blobCapturedImage, setBlobCapturedImage] = useState(null);
-  StatusBar.setHidden(true);
+  useEffect(() => {
+    StatusBar.setHidden(true);
+    return () => {
+      StatusBar.setHidden(false);
+    };
+  }, []);
   console.log(routeName);
 
   const autorisation = async () => {
@@ -37,7 +42,7 @@ export function OpenCamera({ route }) {
   let camera = Camera;
 
   const options = {
-    quality: 1,
+    quality: 0.1,
     base64: true,
   };
 
@@ -61,7 +66,7 @@ export function OpenCamera({ route }) {
   const validerPhoto = () => {
     navigation.navigate({
       name: routeName,
-      params: { photoEquipement: blobCapturedImage },
+      params: { photoEquipement: blobCapturedImage, equipementId },
       merge: true,
     });
   };
