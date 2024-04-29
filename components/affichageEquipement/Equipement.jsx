@@ -79,10 +79,8 @@ export function Equipement({ route }) {
   if (route.params?.photoEquipement && route.params?.equipementId) {
     const photoEquipement = route.params.photoEquipement;
 
-    // Parcourez les équipements et mettez à jour la photo de l'équipement spécifique
     equipements.forEach((equipement, index) => {
       if (equipement.id === route.params.equipementId) {
-        // Mettez à jour la photo de l'équipement
         equipements[index].photo = photoEquipement;
       }
     });
