@@ -13,12 +13,14 @@ import { AntDesign } from "@expo/vector-icons"; // Importez les icônes d'une bi
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 
-export function OpenCamera() {
+export function OpenCamera({ route }) {
   const navigation = useNavigation();
+  const { routeName } = route.params;
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [blobCapturedImage, setBlobCapturedImage] = useState(null);
   StatusBar.setHidden(true);
+  console.log(routeName);
 
   const autorisation = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
@@ -35,7 +37,7 @@ export function OpenCamera() {
   let camera = Camera;
 
   const options = {
-    quality: 0.1,
+    quality: 1,
     base64: true,
   };
 
@@ -58,7 +60,7 @@ export function OpenCamera() {
 
   const validerPhoto = () => {
     navigation.navigate({
-      name: "Piece",
+      name: routeName,
       params: { photoEquipement: blobCapturedImage },
       merge: true,
     });

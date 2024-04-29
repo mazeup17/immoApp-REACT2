@@ -5,6 +5,7 @@ import Nav from "./components/navigation/Nav";
 import { createStackNavigator } from "@react-navigation/stack";
 import { UserProvider } from "./utils/context";
 import { OpenCamera } from "./components/Camera/OpenCamera";
+import { Equipement } from "./components/affichageEquipement/Equipement";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,11 @@ export default function App() {
             name="OpenCamera"
             component={OpenCamera}
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Equipement"
+            component={Equipement}
+            options={{ title: "Equipement" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
