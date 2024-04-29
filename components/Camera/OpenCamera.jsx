@@ -15,10 +15,11 @@ import { StatusBar } from "react-native";
 
 export function OpenCamera({ route }) {
   const navigation = useNavigation();
-  const { routeName, equipementId } = route.params;
+  const { routeName, setEquipementPhotos, equipementId } = route.params;
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [blobCapturedImage, setBlobCapturedImage] = useState(null);
+
   useEffect(() => {
     StatusBar.setHidden(true);
     return () => {
@@ -64,11 +65,11 @@ export function OpenCamera({ route }) {
   };
 
   const validerPhoto = () => {
-    navigation.navigate({
-      name: routeName,
-      params: { photoEquipement: blobCapturedImage, equipementId },
-      merge: true,
-    });
+    setEquipementPhotos((prevPhotos) => ({
+      ...prevPhotos,
+      [equipementId]: blobCapturedImage,
+    }));
+    navigation.goBack();
   };
 
   const CameraPreview = ({ photo, retakePicture, savePhoto }) => {

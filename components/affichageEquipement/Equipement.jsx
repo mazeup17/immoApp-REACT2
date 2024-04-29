@@ -15,6 +15,7 @@ export function Equipement({ route }) {
   const { pieceId } = route.params;
   const [equipementIndex, setEquipementsIndex] = useState(0);
   const [equipements, setEquipements] = useState([]);
+  const [equipementPhotos, setEquipementPhotos] = useState({});
   const [comments, setComments] = useState({});
   const [ratings, setRatings] = useState({});
   const navigation = useNavigation();
@@ -47,6 +48,8 @@ export function Equipement({ route }) {
     navigation.navigate("OpenCamera", {
       routeName: "Equipement",
       equipementId,
+      equipementPhotos,
+      setEquipementPhotos,
     });
   };
 
@@ -75,16 +78,6 @@ export function Equipement({ route }) {
       [equipementId]: rating,
     }));
   };
-
-  if (route.params?.photoEquipement && route.params?.equipementId) {
-    const photoEquipement = route.params.photoEquipement;
-
-    equipements.forEach((equipement, index) => {
-      if (equipement.id === route.params.equipementId) {
-        equipements[index].photo = photoEquipement;
-      }
-    });
-  }
 
   const handleConfirmation = async () => {
     const dataComments = Object.entries(comments).map(([id, commentaire]) => ({
@@ -134,7 +127,7 @@ export function Equipement({ route }) {
                 <Text>Ajouter une photo (pas obligatoire)</Text>
               </TouchableOpacity>
               <View style={{}}>
-                {equipements[equipementIndex].photo && (
+                {equipementPhotos[equipements[equipementIndex].id] && (
                   <Image
                     style={{
                       width: 200,
@@ -142,7 +135,9 @@ export function Equipement({ route }) {
                       resizeMode: "contain",
                     }}
                     source={{
-                      uri: `data:image/jpg;base64,${equipements[equipementIndex].photo}`,
+                      uri: `data:image/jpg;base64,${
+                        equipementPhotos[equipements[equipementIndex].id]
+                      }`,
                     }}
                   />
                 )}

@@ -111,11 +111,10 @@ export function Piece({ route }) {
       <View>
         {pieceLogement.map((piece) => {
           return (
-            <View>
+            <View key={piece.id}>
               <Card
                 style={s.cardContainer}
                 onPress={() => handleEquipement(piece.id, piece.libelle)}
-                key={piece.id}
               >
                 <Card.Title
                   title={piece.libelle}
