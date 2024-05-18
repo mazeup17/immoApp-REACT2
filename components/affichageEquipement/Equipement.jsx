@@ -20,6 +20,8 @@ export function Equipement({ route }) {
   const [ratings, setRatings] = useState({});
   const navigation = useNavigation();
 
+  //console.log(comments);
+
   useEffect(() => {
     const fetchEquipements = async () => {
       try {
@@ -42,7 +44,7 @@ export function Equipement({ route }) {
     };
 
     fetchEquipements();
-  });
+  }, []);
 
   const handlePhoto = async (equipementId) => {
     navigation.navigate("OpenCamera", {
@@ -80,22 +82,46 @@ export function Equipement({ route }) {
   };
 
   const handleConfirmation = async () => {
-    const dataComments = Object.entries(comments).map(([id, commentaire]) => ({
-      id: parseInt(id),
-      commentaire,
-      rating: ratings[id] || 0,
-    }));
+    console.log(comments); // Vérifiez les commentaires actuels
+    const dataComments = Object.entries(comments).map(([id, commentaire]) => {
+      /*console.log("ID:", id); // Vérifiez l'ID de l'équipement
+      console.log("Commentaire:", commentaire); // Vérifiez le commentaire associé à l'équipement
+      console.log("Rating:", ratings[id] || 0);
+      console.log("Photo :", equipementPhotos[id] || null);*/
+      console.log("Piece id :", pieceId);
 
-    const dataEtoiles = pieceLogement.map((piece) => ({
-      pieceId: piece.id,
-      commentaire: null,
-      id: null,
-      rating: null,
-    }));
+      return {
+        id: parseInt(id),
+        id_piece: pieceId, 
+        commentaire,
+        rating: ratings[id] || 0,
+        photo: equipementPhotos[id] || null,
+      };
 
-    const allData = [...dataComments, ...dataEtoiles];
+    });
 
-    console.log(allData);
+    try {
+      const response = await fetch(
+        "http://31.207.34.99/immoApi/evaluationEquipement.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataComments),
+        }
+      );
+
+      if (!response.ok) {
+        console.log("La requête n'a pas abouti :", response.status);
+      }
+
+      // Authentification réussie
+      const data = await response.json();
+      console.log(data); // Afficher le message de réussite d'authentification
+    } catch (error) {
+      console.error("Erreur lors de la requête fetch :", error);
+    }
   };
 
   useEffect(() => {

@@ -24,6 +24,7 @@ export function Piece({ route }) {
           throw new Error("Erreur lors de la récupération des pièces");
         }
         const data = await response.json();
+
         setPieceLogement(data);
         if (data.length > 0) {
           setCurrentPieceLibelle(data[0].libelle);
@@ -42,12 +43,14 @@ export function Piece({ route }) {
         const piece = pieceLogement[pieceIndex];
         try {
           const response = await fetch(
-            `http://31.207.34.99/immoApi/equipement.php?id_appartement=${piece.id}`
+            `http://31.207.34.99/immoApi/equipement.php?id_appartement=${piece.id_logement}`
           );
           if (!response.ok) {
             throw new Error("Erreur lors de la récupération des équipements");
           }
           const data = await response.json();
+          console.log(data);
+
 
           const filteredEquipements = data.filter(
             (equipement) => equipement.id_piece === piece.id
@@ -63,7 +66,41 @@ export function Piece({ route }) {
     fetchEquipements();
   }, [pieceIndex, pieceLogement]);
 
-  console.log(pieceLogement);
+  
+
+ 
+    useEffect(() => {
+      const fetchAllEquipements = async () => {
+        if (equipements.length > 0) {
+          try {
+            const requests = equipements.map(equipement => (
+              fetch(`http://31.207.34.99/immoApi/evaluationEquipement.php?id_equipement=${equipement.id}&id_piece=${equipement.id_piece}`)
+                .then(response => {
+              console.log(equipement.id);
+
+                  if (!response.ok) {
+                    throw new Error(`Erreur lors de la récupération de l'équipement ${equipement.id}`);
+                  }
+                  return response.json();
+                })
+            ));
+            
+    
+            const responses = await Promise.all(requests);
+            console.log(responses);
+            // Mettez ici la manipulation des données récupérées selon vos besoins.
+          } catch (error) {
+            console.error(error.message);
+          }
+        }
+      };
+    
+      fetchAllEquipements();
+    }, [equipements]);
+    
+  
+
+  //console.log(pieceLogement);
 
   const handleConfirmation = async () => {
     const dataComments = Object.entries(comments).map(([id, commentaire]) => ({

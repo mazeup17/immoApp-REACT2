@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Camera } from "expo-camera";
+import { CameraView } from "expo-camera";
 import { StyleSheet } from "react-native";
 import {
   View,
@@ -26,10 +26,9 @@ export function OpenCamera({ route }) {
       StatusBar.setHidden(false);
     };
   }, []);
-  console.log(routeName);
 
   const autorisation = async () => {
-    const { status } = await Camera.requestCameraPermissionsAsync();
+    const { status } = await CameraView.requestCameraPermissionsAsync();
     if (status != "granted") {
       navigation.goBack();
       Alert.alert(
@@ -40,7 +39,7 @@ export function OpenCamera({ route }) {
 
   autorisation();
 
-  let camera = Camera;
+  let camera = CameraView;
 
   const options = {
     quality: 0.1,
@@ -110,7 +109,7 @@ export function OpenCamera({ route }) {
           retakePicture={reprendrePhoto}
         />
       ) : (
-        <Camera
+        <CameraView
           style={{ flex: 1 }}
           ref={(r) => {
             camera = r;
@@ -126,7 +125,7 @@ export function OpenCamera({ route }) {
               <TouchableOpacity onPress={prendrePhoto} style={s.btnTakePhoto} />
             </View>
           </View>
-        </Camera>
+        </CameraView>
       )}
     </>
   );
