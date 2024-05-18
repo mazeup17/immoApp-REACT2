@@ -81,6 +81,8 @@ export function Equipement({ route }) {
     }));
   };
 
+  console.log(equipementPhotos);
+
   const handleConfirmation = async () => {
     console.log(comments); // Vérifiez les commentaires actuels
     const dataComments = Object.entries(comments).map(([id, commentaire]) => {
@@ -92,15 +94,15 @@ export function Equipement({ route }) {
 
       return {
         id: parseInt(id),
-        id_piece: pieceId, 
+        id_piece: pieceId,
         commentaire,
         rating: ratings[id] || 0,
         photo: equipementPhotos[id] || null,
       };
-
     });
 
     try {
+      console.log(dataComments);
       const response = await fetch(
         "http://31.207.34.99/immoApi/evaluationEquipement.php",
         {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Button } from "react-native";
+import { View, Button, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Card } from "react-native-paper";
 import { s } from "./Piece.style";
@@ -13,6 +13,7 @@ export function Piece({ route }) {
   const [ratings, setRatings] = useState({});
   const [currentPieceLibelle, setCurrentPieceLibelle] = useState(null);
   const navigation = useNavigation();
+  const [moyennes, setMoyennes] = useState([]);
 
   useEffect(() => {
     const fetchPieceLogement = async () => {
@@ -49,14 +50,10 @@ export function Piece({ route }) {
             throw new Error("Erreur lors de la récupération des équipements");
           }
           const data = await response.json();
-          console.log(data);
 
+          
 
-          const filteredEquipements = data.filter(
-            (equipement) => equipement.id_piece === piece.id
-          );
-
-          setEquipements(filteredEquipements);
+          setEquipements(data);
         } catch (error) {
           console.error(error);
         }
@@ -66,70 +63,24 @@ export function Piece({ route }) {
     fetchEquipements();
   }, [pieceIndex, pieceLogement]);
 
-  
-
- 
-    useEffect(() => {
-      const fetchAllEquipements = async () => {
-        if (equipements.length > 0) {
-          try {
-            const requests = equipements.map(equipement => (
-              fetch(`http://31.207.34.99/immoApi/evaluationEquipement.php?id_equipement=${equipement.id}&id_piece=${equipement.id_piece}`)
-                .then(response => {
-              console.log(equipement.id);
-
-                  if (!response.ok) {
-                    throw new Error(`Erreur lors de la récupération de l'équipement ${equipement.id}`);
-                  }
-                  return response.json();
-                })
-            ));
-            
-    
-            const responses = await Promise.all(requests);
-            console.log(responses);
-            // Mettez ici la manipulation des données récupérées selon vos besoins.
-          } catch (error) {
-            console.error(error.message);
-          }
-        }
-      };
-    
-      fetchAllEquipements();
-    }, [equipements]);
-    
-  
-
-  //console.log(pieceLogement);
-
   const handleConfirmation = async () => {
-    const dataComments = Object.entries(comments).map(([id, commentaire]) => ({
-      id: parseInt(id),
-      commentaire,
-      rating: ratings[id] || 0,
-    }));
-
-    const allData = [...dataComments, ...dataEtoiles];
-
-    console.log(allData);
     try {
-      const response = await fetch(
-        "http://31.207.34.99/immoApi/evaluationPiece.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(allData),
-        }
-      );
+      const id_equipements = equipements.map(equip => ({ id_equipement: equip.id }));
+      const id_pieces = pieceLogement.map(piece => ({ id_piece: piece.id }));
+
+      const response = await fetch(`http://31.207.34.99/immoApi/evaluationEquipement.php?id_equipements=${JSON.stringify(id_equipements)}&id_pieces=${JSON.stringify(id_pieces)}`);
+      
       if (!response.ok) {
-        throw new Error("Erreur lors de l'envoi des données");
+        throw new Error("Erreur lors de la récupération des moyennes");
       }
-      console.log("etoile bien effectué");
+
+      const data = await response.json();
+      setMoyennes(data);
+      console.log(id_equipements);
+
+      console.log(data);
     } catch (error) {
       console.error(error);
-      console.log("Erreur lors de l'envoi des données");
     }
   };
 
@@ -141,6 +92,11 @@ export function Piece({ route }) {
         pieceId: pieceId,
       },
     });
+  };
+
+  const getMoyenneForPiece = (pieceId) => {
+    const moyenne = moyennes.find(m => m.id_piece === pieceId);
+    return moyenne ? moyenne.moyenne_etoiles : 'N/A';
   };
 
   if (pieceLogement.length > 0) {
@@ -157,6 +113,9 @@ export function Piece({ route }) {
                   title={piece.libelle}
                   subtitle={`Nombre d'équipements: ${equipements.length}`} // Utilisation du nombre d'équipements filtrés
                 />
+                <Card.Content>
+                  <Text>{`Moyenne Étoiles: ${getMoyenneForPiece(piece.id)}`}</Text>
+                </Card.Content>
               </Card>
             </View>
           );
@@ -165,6 +124,9 @@ export function Piece({ route }) {
       </View>
     );
   }
+
+  return <View />;
 }
+
 
 export default Piece;

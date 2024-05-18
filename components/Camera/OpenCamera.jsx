@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { CameraView } from "expo-camera";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { StyleSheet } from "react-native";
+import { LogBox } from "react-native";
 import {
   View,
   TouchableOpacity,
@@ -9,16 +10,21 @@ import {
   Alert,
 } from "react-native";
 import { useState } from "react";
-import { AntDesign } from "@expo/vector-icons"; // Importez les icônes d'une bibliothèque
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 
 export function OpenCamera({ route }) {
   const navigation = useNavigation();
+  const [permission, requestPermission] = useCameraPermissions();
   const { routeName, setEquipementPhotos, equipementId } = route.params;
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [blobCapturedImage, setBlobCapturedImage] = useState(null);
+
+  LogBox.ignoreLogs([
+    "Non-serializable values were found in the navigation state",
+  ]);
 
   useEffect(() => {
     StatusBar.setHidden(true);
@@ -28,8 +34,7 @@ export function OpenCamera({ route }) {
   }, []);
 
   const autorisation = async () => {
-    const { status } = await CameraView.requestCameraPermissionsAsync();
-    if (status != "granted") {
+    if (!permission.granted) {
       navigation.goBack();
       Alert.alert(
         "Accès refusé, veuillez nous autoriser à accéder à la caméra dans vos paramètres"
