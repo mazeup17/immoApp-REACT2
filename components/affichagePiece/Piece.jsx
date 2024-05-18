@@ -51,8 +51,6 @@ export function Piece({ route }) {
           }
           const data = await response.json();
 
-          
-
           setEquipements(data);
         } catch (error) {
           console.error(error);
@@ -65,11 +63,17 @@ export function Piece({ route }) {
 
   const handleConfirmation = async () => {
     try {
-      const id_equipements = equipements.map(equip => ({ id_equipement: equip.id }));
-      const id_pieces = pieceLogement.map(piece => ({ id_piece: piece.id }));
+      const id_equipements = equipements.map((equip) => ({
+        id_equipement: equip.id,
+      }));
+      const id_pieces = pieceLogement.map((piece) => ({ id_piece: piece.id }));
 
-      const response = await fetch(`http://31.207.34.99/immoApi/evaluationEquipement.php?id_equipements=${JSON.stringify(id_equipements)}&id_pieces=${JSON.stringify(id_pieces)}`);
-      
+      const response = await fetch(
+        `http://31.207.34.99/immoApi/evaluationEquipement.php?id_equipements=${JSON.stringify(
+          id_equipements
+        )}&id_pieces=${JSON.stringify(id_pieces)}`
+      );
+
       if (!response.ok) {
         throw new Error("Erreur lors de la récupération des moyennes");
       }
@@ -95,8 +99,8 @@ export function Piece({ route }) {
   };
 
   const getMoyenneForPiece = (pieceId) => {
-    const moyenne = moyennes.find(m => m.id_piece === pieceId);
-    return moyenne ? moyenne.moyenne_etoiles : 'N/A';
+    const moyenne = moyennes.find((m) => m.id_piece === pieceId);
+    return moyenne ? moyenne.moyenne_etoiles : "N/A";
   };
 
   if (pieceLogement.length > 0) {
@@ -111,11 +115,8 @@ export function Piece({ route }) {
               >
                 <Card.Title
                   title={piece.libelle}
-                  subtitle={`Nombre d'équipements: ${equipements.length}`} // Utilisation du nombre d'équipements filtrés
+                  subtitle={`Moyenne Étoiles: ${getMoyenneForPiece(piece.id)}`}
                 />
-                <Card.Content>
-                  <Text>{`Moyenne Étoiles: ${getMoyenneForPiece(piece.id)}`}</Text>
-                </Card.Content>
               </Card>
             </View>
           );
@@ -127,6 +128,5 @@ export function Piece({ route }) {
 
   return <View />;
 }
-
 
 export default Piece;
