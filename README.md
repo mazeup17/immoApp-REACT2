@@ -6,7 +6,7 @@
   * ```npx expo start``` ou ```npm start```
  
 # Comment utiliser l'application
-**Il faut obligatoirement que l'appareil que vous utiliser pour tester l'application soit sur le même réseau que l'appareil sur lequelle vous avez lancé l'application**
+**Il faut obligatoirement que l'appareil que vous utilisé pour tester l'application soit sur le même réseau que l'appareil sur lequelle vous avez lancé l'application**
 * Sur smartphone :
   * Tout d'abord télécharger l'application Expo GO
   * Ensuite il suffit de scanner le qrCode avec votre téléphone lors du lancement de l'application sur VSCode
