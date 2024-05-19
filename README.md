@@ -14,4 +14,4 @@
 * Sur pc :
   * Installer Android Studio si ce n'est pas déjà le cas
   * Lancer le smartphone sur Android Studio
-  * Une fois le lancement de l'application sur VSCode effectué, il suffit de taper la touche **r** dans le terminal, ce qui ouvrira l'application sur Android Studio
+  * Une fois le lancement de l'application sur VSCode effectué, il suffit de taper la touche **a** dans le terminal, ce qui ouvrira l'application sur Android Studio
