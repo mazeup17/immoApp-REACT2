@@ -83,7 +83,7 @@ function Affichage() {
   if (appartementProprio.error != null) {
     return (
       <View style={s.container}>
-        <Text>Vous n'avez aucune réservation en cours</Text>
+        <Text>Vous n'avez aucun état des lieux en attente d'être éffectué</Text>
       </View>
     );
   }

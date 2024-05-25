@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Button, Text } from "react-native";
+import { View, Button, Text, StyleSheet, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Card } from "react-native-paper";
 import { s } from "./Piece.style";
@@ -14,6 +14,26 @@ export function Piece({ route }) {
   const [currentPieceLibelle, setCurrentPieceLibelle] = useState(null);
   const navigation = useNavigation();
   const [moyennes, setMoyennes] = useState([]);
+  const [showBox, setShowBox] = useState(true);
+
+  const confirmDialog = () => {
+    return Alert.alert(
+      "Confirmation",
+      "Êtes-vous sûr de confirmer la fin de votre état des lieux ?",
+      [
+        {
+          text: "Confirmer",
+          onPress: async () => {
+            await handleConfirmation();
+            setShowBox(false);
+          },
+        },
+        {
+          text: "Annuler",
+        },
+      ]
+    );
+  };
 
   useEffect(() => {
     const fetchPieceLogement = async () => {
@@ -71,20 +91,26 @@ export function Piece({ route }) {
       const response = await fetch(
         `http://31.207.34.99/immoApi/evaluationEquipement.php?id_equipements=${JSON.stringify(
           id_equipements
-        )}&id_pieces=${JSON.stringify(id_pieces)}`
+        )}&id_pieces=${JSON.stringify(
+          id_pieces
+        )}&id_appartement=${appartementId}`
       );
 
+      const responseText = await response.text(); // Lire la réponse en texte brut
+      console.log("Réponse brute:", responseText); // Afficher la réponse brute
+
       if (!response.ok) {
-        throw new Error("Erreur lors de la récupération des moyennes");
+        throw new Error(
+          `Erreur lors de la récupération des moyennes: ${responseText}`
+        );
       }
 
-      const data = await response.json();
+      const data = JSON.parse(responseText); // Parser la réponse après vérification
       setMoyennes(data);
       console.log(id_equipements);
-
       console.log(data);
     } catch (error) {
-      console.error(error);
+      console.error("Erreur:", error);
     }
   };
 
@@ -100,7 +126,7 @@ export function Piece({ route }) {
 
   const getMoyenneForPiece = (pieceId) => {
     const moyenne = moyennes.find((m) => m.id_piece === pieceId);
-    return moyenne ? moyenne.moyenne_etoiles : "N/A";
+    return moyenne ? parseFloat(moyenne.moyenne_etoiles).toFixed(1) : "N/A";
   };
 
   if (pieceLogement.length > 0) {
@@ -121,7 +147,7 @@ export function Piece({ route }) {
             </View>
           );
         })}
-        <Button title="Confirmer" onPress={handleConfirmation} />
+        <Button title="Confirmer" onPress={confirmDialog} />
       </View>
     );
   }
