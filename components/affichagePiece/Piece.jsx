@@ -5,7 +5,7 @@ import { Card } from "react-native-paper";
 import { s } from "./Piece.style";
 
 export function Piece({ route }) {
-  const { appartementId } = route.params;
+  const { appartementId, reservationId } = route.params;
   const [pieceLogement, setPieceLogement] = useState([]);
   const [pieceIndex, setPieceIndex] = useState(0);
   const [equipements, setEquipements] = useState([]);
@@ -22,14 +22,14 @@ export function Piece({ route }) {
       "Êtes-vous sûr de confirmer la fin de votre état des lieux ?",
       [
         {
+          text: "Annuler",
+        },
+        {
           text: "Confirmer",
           onPress: async () => {
             await handleConfirmation();
             setShowBox(false);
           },
-        },
-        {
-          text: "Annuler",
         },
       ]
     );
@@ -93,7 +93,7 @@ export function Piece({ route }) {
           id_equipements
         )}&id_pieces=${JSON.stringify(
           id_pieces
-        )}&id_appartement=${appartementId}`
+        )}&id_reservation=${reservationId}`
       );
 
       const responseText = await response.text(); // Lire la réponse en texte brut
@@ -120,6 +120,7 @@ export function Piece({ route }) {
       params: {
         pieceLibelle: pieceLibelle,
         pieceId: pieceId,
+        reservationId: reservationId,
       },
     });
   };

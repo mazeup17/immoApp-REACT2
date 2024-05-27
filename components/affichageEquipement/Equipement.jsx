@@ -6,21 +6,19 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 export function Equipement({ route }) {
-  const { pieceLibelle } = route.params;
-  const { pieceId } = route.params;
+  const { pieceLibelle, pieceId, reservationId } = route.params;
   const [equipementIndex, setEquipementsIndex] = useState(0);
   const [equipements, setEquipements] = useState([]);
   const [equipementPhotos, setEquipementPhotos] = useState({});
   const [comments, setComments] = useState({});
   const [ratings, setRatings] = useState({});
   const navigation = useNavigation();
-
-  //console.log(comments);
 
   useEffect(() => {
     const fetchEquipements = async () => {
@@ -44,9 +42,28 @@ export function Equipement({ route }) {
     };
 
     fetchEquipements();
-  }, []);
+  }, [pieceId]);
 
-  const handlePhoto = async (equipementId) => {
+  const confirmDialog = () => {
+    return Alert.alert(
+      "Confirmation",
+      "Êtes-vous sûr de confirmer la fin de votre état des lieux pour cette pièce ?",
+      [
+        {
+          text: "Annuler",
+        },
+        {
+          text: "Confirmer",
+          onPress: async () => {
+            await handleConfirmation();
+            setShowBox(false);
+          },
+        },
+      ]
+    );
+  };
+
+  const handlePhoto = (equipementId) => {
     navigation.navigate("OpenCamera", {
       routeName: "Equipement",
       equipementId,
@@ -81,8 +98,6 @@ export function Equipement({ route }) {
     }));
   };
 
-  console.log(equipementPhotos);
-
   const handleConfirmation = async () => {
     console.log(comments); // Vérifiez les commentaires actuels
     const dataComments = Object.entries(comments).map(([id, commentaire]) => {
@@ -98,6 +113,7 @@ export function Equipement({ route }) {
         commentaire,
         rating: ratings[id] || 0,
         photo: equipementPhotos[id] || null,
+        id_reservation: reservationId,
       };
     });
 
@@ -116,11 +132,15 @@ export function Equipement({ route }) {
 
       if (!response.ok) {
         console.log("La requête n'a pas abouti :", response.status);
+        Alert.alert(
+          "Il y a eu une erreur lors de la transimission des données"
+        );
+      } else {
+        navigation.goBack();
+        // Authentification réussie
+        const data = await response.json();
+        console.log(data); // Afficher le message de réussite d'authentification
       }
-
-      // Authentification réussie
-      const data = await response.json();
-      console.log(data); // Afficher le message de réussite d'authentification
     } catch (error) {
       console.error("Erreur lors de la requête fetch :", error);
     }
@@ -132,7 +152,7 @@ export function Equipement({ route }) {
         title: pieceLibelle,
       });
     }
-  }, [navigation]);
+  }, [pieceLibelle, navigation]);
 
   return (
     <View>
@@ -154,7 +174,7 @@ export function Equipement({ route }) {
               >
                 <Text>Ajouter une photo (pas obligatoire)</Text>
               </TouchableOpacity>
-              <View style={{}}>
+              <View>
                 {equipementPhotos[equipements[equipementIndex].id] && (
                   <Image
                     style={{
@@ -195,9 +215,19 @@ export function Equipement({ route }) {
           </View>
         )}
       </View>
-      <Button title="Précédent" onPress={handlePrev} />
-      <Button title="Suivant" onPress={handleNext} />
-      <Button title="Confirmer" onPress={handleConfirmation} />
+      {equipements.length > 1 && (
+        <View>
+          {equipementIndex > 0 && (
+            <Button title="Précédent" onPress={handlePrev} />
+          )}
+          {equipementIndex < equipements.length - 1 && (
+            <Button title="Suivant" onPress={handleNext} />
+          )}
+        </View>
+      )}
+      {equipementIndex === equipements.length - 1 && (
+        <Button title="Confirmer" onPress={confirmDialog} />
+      )}
     </View>
   );
 }
