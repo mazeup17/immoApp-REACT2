@@ -107,6 +107,7 @@ export function Piece({ route }) {
 
       const data = JSON.parse(responseText); // Parser la réponse après vérification
       setMoyennes(data);
+      navigation.goBack();
       console.log(id_equipements);
       console.log(data);
     } catch (error) {
