@@ -93,7 +93,7 @@ export function Piece({ route }) {
           id_equipements
         )}&id_pieces=${JSON.stringify(
           id_pieces
-        )}&id_reservation=${reservationId}`
+        )}&id_reservation=${reservationId}&id_appartement=${appartementId}`
       );
 
       const responseText = await response.text(); // Lire la réponse en texte brut
