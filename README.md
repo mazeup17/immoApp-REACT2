@@ -15,3 +15,7 @@
   * Installer Android Studio si ce n'est pas déjà le cas
   * Lancer le smartphone sur Android Studio
   * Une fois le lancement de l'application sur VSCode effectué, il suffit de taper la touche **a** dans le terminal, ce qui ouvrira l'application sur Android Studio
+
+# Comptes utilisateurs : 
+ * Email : pereirabaptiste1@gmail.com
+ * Mot de passe : test
